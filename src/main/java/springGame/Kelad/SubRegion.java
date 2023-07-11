@@ -6,12 +6,20 @@ import java.util.stream.IntStream;
 
 public class SubRegion {
     private String name;
-    private List<Building> buildings;
+    private List<Cluster> clusters;
     private int size; // In square kilometers
+    private ClimateType climateType;
 
-    public SubRegion(String name, List<Building> buildings, int size) {
+    public ClimateType getClimateType() {
+        return climateType;
+    }
+
+    public void setClimateType(ClimateType climateType) {
+        this.climateType = climateType;
+    }
+
+    public SubRegion(String name, int size) {
         this.name = name;
-        this.buildings = buildings;
         this.size = size;
     }
 
@@ -23,12 +31,12 @@ public class SubRegion {
         this.name = name;
     }
 
-    public List<Building> getBuildings() {
-        return buildings;
+    public List<Cluster> getClusters() {
+        return clusters;
     }
 
-    public void setBuildings(List<Building> buildings) {
-        this.buildings = buildings;
+    public void setClusters(List<Cluster> clusters) {
+        this.clusters = clusters;
     }
 
     public int getSize() {
@@ -41,15 +49,20 @@ public class SubRegion {
 
     @Override
     public String toString() {
-        return "SubRegion: " + name + " Size: " + size + "km^2\n" + buildings.stream().map(Building::toString).collect(Collectors.joining());
+        return "SubRegion: " + name + " Size: " + size + "km^2\n" + clusters.stream().map(Cluster::toString).collect(Collectors.joining());
     }
 
-    public static SubRegion generateRandom() {
+    public static SubRegion generateRandom(Region region) {
         String name = NameGenerator.generateRandomName();
         int size = ThreadLocalRandom.current().nextInt(10, 500); // random size between 10 and 500 km^2
-        int buildingCount = ThreadLocalRandom.current().nextInt(1, 6); // random number of buildings between 1 and 5
-        List<Building> buildings = IntStream.range(0, buildingCount).mapToObj(i -> Building.generateRandom()).collect(Collectors.toList());
-        return new SubRegion(name, buildings, size);
+        int clusterCount = ThreadLocalRandom.current().nextInt(1, 6); // random number of clusters between 1 and 5
+
+        SubRegion subRegion = new SubRegion(name, size);
+
+        List<Cluster> clusters = IntStream.range(0, clusterCount).mapToObj(i -> Cluster.generateRandom(subRegion)).collect(Collectors.toList());
+        subRegion.setClusters(clusters);
+        subRegion.setClimateType(region.getClimateType());
+        return subRegion;
     }
 }
 

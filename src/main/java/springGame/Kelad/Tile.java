@@ -6,13 +6,16 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class PartOfRoom {
+public class Tile {
     private String name;
     private List<Person> characters; // holds up to 2 characters
     private List<Item> items; // holds up to 4 average-sized items
     private int size; // fixed size
 
-    public PartOfRoom(String name, List<Person> characters, List<Item> items, int size) {
+    public void setClimateType(ClimateType climateType) {
+    }
+
+    public Tile(String name, List<Person> characters, List<Item> items, int size) {
         this.name = name;
         this.characters = characters;
         this.items = items;
@@ -58,7 +61,7 @@ public class PartOfRoom {
                 "\nItems: " + items.stream().map(Item::toString).collect(Collectors.joining(", ")) + "\n";
     }
 
-    public static PartOfRoom generateRandom() {
+    public static Tile generateRandom(Cell cell) {
         String name = NameGenerator.generateRandomName();
         int size = 10; // fixed size in square feet
 
@@ -66,9 +69,13 @@ public class PartOfRoom {
         List<Person> characters = IntStream.range(0, characterCount).mapToObj(i -> Person.generateRandom()).collect(Collectors.toList());
 
         int itemCount = ThreadLocalRandom.current().nextInt(0, 5); // random number of items between 0 and 4
+
         List<Item> items = IntStream.range(0, itemCount).mapToObj(i -> Item.generateRandom()).collect(Collectors.toList());
 
-        return new PartOfRoom(name, characters, items, size);
+        Tile tile = new Tile(name, characters, items, size);
+        tile.setClimateType(cell.getClimateType());
+
+        return new Tile(name, characters, items, size);
     }
 }
 

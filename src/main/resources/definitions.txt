@@ -1,0 +1,11 @@
+ from smallest to biggest -
+
+Tiles (previously partofRoom) - smallest unit
+Cells (previously Rooms) - has multiple tiles
+Clusters (previously clusters) - has multiple cells
+subRegions (no change, they are essentially neighborhood sized objects) - has multiple clusters
+Regions (previously megaRegion) - multiple subregions
+Zones (previously cities) - multiple regions
+MegaRegion (Collection of zones) - collection of zones - mostly used for weather/culture
+Divisions (previously province) - province/state level size collection of Zones/megaregions
+ Domains (previously countries) - collection of divisions

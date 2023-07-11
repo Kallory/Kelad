@@ -1,18 +1,23 @@
 package springGame.Kelad;
+
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class City {
+public class Division {
     private String name;
     private List<MegaRegion> megaRegions;
     private int size; // In square kilometers
 
-    public City(String name, List<MegaRegion> megaRegions, int size) {
+    public Division(String name, int size) {
         this.name = name;
-        this.megaRegions = megaRegions;
         this.size = size;
+    }
+
+    @Override
+    public String toString() {
+        return "Division: " + name + " Size: " + size + "km^2\n" + megaRegions.stream().map(MegaRegion::toString).collect(Collectors.joining());
     }
 
     public String getName() {
@@ -23,11 +28,11 @@ public class City {
         this.name = name;
     }
 
-    public List<MegaRegion> getMegaRegions() {
+    public List<MegaRegion> getmegaRegions() {
         return megaRegions;
     }
 
-    public void setMegaRegions(List<MegaRegion> megaRegions) {
+    public void setmegaRegions(List<MegaRegion> megaRegions) {
         this.megaRegions = megaRegions;
     }
 
@@ -39,17 +44,15 @@ public class City {
         this.size = size;
     }
 
-    @Override
-    public String toString() {
-        return "City: " + name + " Size: " + size + "km^2\n" + megaRegions.stream().map(MegaRegion::toString).collect(Collectors.joining());
-    }
-
-    public static City generateRandom() {
+    public static Division generateRandom() {
         String name = NameGenerator.generateRandomName();
-        int size = ThreadLocalRandom.current().nextInt(1000, 10000); // random size between 1000 and 10000 km^2
-        int megaRegionCount = ThreadLocalRandom.current().nextInt(1, 6); // random number of mega regions between 1 and 5
+        int size = ThreadLocalRandom.current().nextInt(10000, 100000); // random size between 10000 and 100000 km^2
+        int megaRegionCount = ThreadLocalRandom.current().nextInt(1, 6); // random number of megaRegions between 1 and 5
         List<MegaRegion> megaRegions = IntStream.range(0, megaRegionCount).mapToObj(i -> MegaRegion.generateRandom()).collect(Collectors.toList());
-        return new City(name, megaRegions, size);
+
+        Division division = new Division(name, size);
+        division.setmegaRegions(megaRegions);
+        return division;
     }
 }
 
