@@ -1,18 +1,27 @@
 package springGame.Kelad;
 
 // PartOfRoom.java
+import Climate.ClimateType;
+import Utility.StatisticsTracker;
+
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import Terrain.*;
 
 public class Tile {
     private String name;
     private List<Person> characters; // holds up to 2 characters
     private List<Item> items; // holds up to 4 average-sized items
     private int size; // fixed size
+    private ClimateType climateType;
+    final public static int TILE_SIZE = 10; // cubic feetf
 
-    public void setClimateType(ClimateType climateType) {
+    private Terrain terrain;
+
+    public ClimateType getClimateType() {
+        return climateType;
     }
 
     public Tile(String name, List<Person> characters, List<Item> items, int size) {
@@ -20,6 +29,10 @@ public class Tile {
         this.characters = characters;
         this.items = items;
         this.size = size;
+    }
+
+    public void setClimateType(ClimateType climateType) {
+        this.climateType = climateType;
     }
 
     public String getName() {
@@ -54,28 +67,37 @@ public class Tile {
         this.size = size;
     }
 
+    public Terrain getTerrain() {
+        return terrain;
+    }
+
+    public void setTerrain(Terrain terrain) {
+        this.terrain = terrain;
+    }
+
     @Override
     public String toString() {
-        return "PartOfRoom: " + name + " Size: " + size + "ft^2\n" +
+        return "Tile: " + name + " Size: " + size + "ft^2\n" +
                 "Characters: " + characters.stream().map(Person::toString).collect(Collectors.joining(", ")) +
                 "\nItems: " + items.stream().map(Item::toString).collect(Collectors.joining(", ")) + "\n";
     }
 
     public static Tile generateRandom(Cell cell) {
         String name = NameGenerator.generateRandomName();
-        int size = 10; // fixed size in square feet
+        int size = TILE_SIZE;
 
         int characterCount = ThreadLocalRandom.current().nextInt(0, 3); // random number of characters between 0 and 2
         List<Person> characters = IntStream.range(0, characterCount).mapToObj(i -> Person.generateRandom()).collect(Collectors.toList());
-
+        StatisticsTracker.population += characterCount;
         int itemCount = ThreadLocalRandom.current().nextInt(0, 5); // random number of items between 0 and 4
-
         List<Item> items = IntStream.range(0, itemCount).mapToObj(i -> Item.generateRandom()).collect(Collectors.toList());
 
         Tile tile = new Tile(name, characters, items, size);
+        StatisticsTracker.tileCount++;
         tile.setClimateType(cell.getClimateType());
-
-        return new Tile(name, characters, items, size);
+        tile.setTerrain(cell.getClimateType().generateTerrain());
+       // System.out.println("Climate type: " + tile.getClimateType());
+        return tile;
     }
 }
 

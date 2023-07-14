@@ -1,5 +1,6 @@
 package springGame.Kelad;
 
+import Utility.StatisticsTracker;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -48,7 +49,8 @@ public class GameController {
 
         // Collect the resulting Stream into a List
         List<Domain> domains = domainStream.collect(Collectors.toList());
-
+        System.out.println("Population: " + StatisticsTracker.getPopulation());
+        System.out.println("Tile count: " + StatisticsTracker.getTileCount());
         return new ResponseEntity<>(domains, HttpStatus.OK);
     }
 }

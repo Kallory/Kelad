@@ -1,5 +1,7 @@
 package springGame.Kelad;
 
+import Utility.StatisticsTracker;
+
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -46,11 +48,17 @@ public class Domain {
 
     public static Domain generateRandom() {
         String name = NameGenerator.generateRandomName();
-        int size = ThreadLocalRandom.current().nextInt(100000, 1000000); // random size between 100000 and 1000000 km^2
+//        int size = ThreadLocalRandom.current().nextInt(100000, 1000000); // random size between 100000 and 1000000 km^2
+        int size = 0;
         int divisionCount = ThreadLocalRandom.current().nextInt(1, 11); // random number of divisions between 1 and 10
         List<Division> divisions = IntStream.range(0, divisionCount).mapToObj(i -> Division.generateRandom()).collect(Collectors.toList());
+        for (int i = 0; i < divisionCount; i++) {
+            size += divisions.get(i).getSize();
+        }
         Domain domain = new Domain(name, size);
         domain.setDivisions(divisions);
+        System.out.println("Domain size: " + domain.getSize());
+        System.out.println("Domain tile count: " + domain.getSize() / 10);
         return domain;
     }
 }

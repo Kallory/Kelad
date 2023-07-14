@@ -1,4 +1,6 @@
 package springGame.Kelad;
+import Climate.ClimateType;
+
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -27,7 +29,7 @@ public class Cell {
 
     @Override
     public String toString() {
-        return "Room: " + name + " Size: " + size + "m^2\n" + tiles.stream().map(Tile::toString).collect(Collectors.joining());
+        return "Cell: " + name + " Size: " + size + "m^2\n" + tiles.stream().map(Tile::toString).collect(Collectors.joining());
     }
 
     public String getName() {
@@ -56,15 +58,21 @@ public class Cell {
 
     public static Cell generateRandom(Cluster cluster) {
         String name = NameGenerator.generateRandomName();
-        int size = ThreadLocalRandom.current().nextInt(10, 50); // random size between 10 and 50 m^2
+       // int size = ThreadLocalRandom.current().nextInt(10, 50); // random size between 10 and 50 m^2
+        int size = 0;
         int tileCount = ThreadLocalRandom.current().nextInt(1, 6); // random number of part of rooms between 1 and 5
 
         Cell cell = new Cell(name, size);
-
-        List<Tile> tiles = IntStream.range(0, tileCount).mapToObj(i -> Tile.generateRandom(cell)).collect(Collectors.toList());
-        cell.setTiles(tiles);
         cell.setClimateType(cluster.getClimateType());
-        return new Cell(name, size);
+        List<Tile> tiles = IntStream.range(0, tileCount).mapToObj(i -> Tile.generateRandom(cell)).collect(Collectors.toList());
+
+        for (int i = 0; i < tileCount; i++) {
+            size += tiles.get(i).getSize();
+        }
+        cell.setSize(size);
+        cell.setTiles(tiles);
+
+        return cell;
     }
 }
 

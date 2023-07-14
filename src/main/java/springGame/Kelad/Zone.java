@@ -1,5 +1,7 @@
 package springGame.Kelad;
 
+import Climate.ClimateType;
+
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -55,15 +57,18 @@ public class Zone {
 
     public static Zone generateRandom(MegaRegion megaRegion) {
         String name = NameGenerator.generateRandomName();
-        int size = ThreadLocalRandom.current().nextInt(1000, 10000); // random size between 1000 and 10000 km^2
+//        int size = ThreadLocalRandom.current().nextInt(1000, 10000); // random size between 1000 and 10000 km^2
+        int size = 0;
         int regionCount = ThreadLocalRandom.current().nextInt(1, 6); // random number of mega regions between 1 and 5
 
-
         Zone zone = new Zone(name, size);
-
+        zone.setClimateType(megaRegion.getClimateType());
         List<Region> regions = IntStream.range(0, regionCount).mapToObj(i -> Region.generateRandom(zone)).collect(Collectors.toList());
         zone.setRegions(regions);
-        zone.setClimateType(megaRegion.getClimateType());
+        for (int i = 0; i < regionCount; i++) {
+            size += regions.get(i).getSize();
+        }
+        zone.setSize(size);
         return zone;
     }
 }

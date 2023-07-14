@@ -46,10 +46,13 @@ public class Division {
 
     public static Division generateRandom() {
         String name = NameGenerator.generateRandomName();
-        int size = ThreadLocalRandom.current().nextInt(10000, 100000); // random size between 10000 and 100000 km^2
+//        int size = ThreadLocalRandom.current().nextInt(10000, 100000); // random size between 10000 and 100000 km^2
+        int size = 0;
         int megaRegionCount = ThreadLocalRandom.current().nextInt(1, 6); // random number of megaRegions between 1 and 5
         List<MegaRegion> megaRegions = IntStream.range(0, megaRegionCount).mapToObj(i -> MegaRegion.generateRandom()).collect(Collectors.toList());
-
+        for (int i = 0; i < megaRegionCount; i++) {
+            size += megaRegions.get(i).getSize();
+        }
         Division division = new Division(name, size);
         division.setmegaRegions(megaRegions);
         return division;
